@@ -1,15 +1,16 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:lts-buster-slim' 
-            args '-p 3000:3000' 
-        }
-    }
+  agent any
+	stages {
+		stage('Checkout SCM') {
+			steps {
+			    cleanWs()
+				checkout scm
+			}
+		}
     stages {
         stage('Build') { 
             steps {
                 sh 'npm install' 
             }
         }
-    }
-}
+    }i}
