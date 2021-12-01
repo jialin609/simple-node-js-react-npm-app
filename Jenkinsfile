@@ -1,5 +1,5 @@
 pipeline {
-  agent any
+	agent any
 	stages {
 		stage('Checkout SCM') {
 			steps {
@@ -7,10 +7,21 @@ pipeline {
 				checkout scm
 			}
 		}
-    stages {
-        stage('Build') { 
-            steps {
-                sh 'npm install' 
+        stage('build')
+        {
+            steps{
+                sh 'apt-get update'
             }
         }
-    }i}
+		stage('OWASP DependencyCheck') {
+			steps {
+				dependencyCheck additionalArguments: '--format HTML --format XML', odcInstallation: 'Default'
+			}
+		}
+	}
+	post {
+		success {
+			dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+		}
+	}
+}
